@@ -72,17 +72,32 @@ void WriteVideoMode(int mode)
 	sprintf_s(value, "%d", mode);
 	WritePrivateProfileStringA("Settings", "VideoMode", value, ".\\mhk2.ini");
 }
+void WriteShadowsMode(eShadowsSettings mode)
+{
+	char value[64] = {};
+	sprintf_s(value, "%d", mode);
+	WritePrivateProfileStringA("Settings", "Shadows", value, ".\\mhk2.ini");
+}
 
 
 INT_PTR CALLBACK Launcher(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	static const wchar_t* szShadowNames[SHADOWS_TOTAL_SETTINGS] = {
+		L"Low",
+		L"Normal",
+		L"High",
+		L"Very High",
+		L"Ultra"
+	};
+
 	switch (message)
 	{
 	case WM_INITDIALOG:
-		DWORD res;
-		HWND list;
+		DWORD res, shadow;
+		HWND list, shadowList;
 
 		res = GetPrivateProfileIntA("Settings", "VideoMode", 0, ".\\mhk2.ini");
+		shadow = GetPrivateProfileIntA("Settings", "Shadows", SHADOWS_NORMAL, ".\\mhk2.ini");
 
 		if (res > resolutions.size())
 			res = 0;
@@ -97,12 +112,25 @@ INT_PTR CALLBACK Launcher(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			ComboBox_AddString(list, tmp);
 		}
 		ComboBox_SetCurSel(list, res);
+
+
+
+		list = GetDlgItem(hDlg, IDC_COMBO2);
+		SendMessage(list, CB_RESETCONTENT, 0, 0);
+
+		for (unsigned int i = 0; i < SHADOWS_TOTAL_SETTINGS; i++)
+			ComboBox_AddString(list, szShadowNames[i]);
+
+		ComboBox_SetCurSel(list, shadow);
+
 		return (INT_PTR)TRUE;
 	case WM_COMMAND:
 		if (LOWORD(wParam) == IDOK)
 		{
 			DWORD mode;
+			eShadowsSettings shadow;
 			mode = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_COMBO1));
+			shadow = (eShadowsSettings)ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_COMBO2));
 			m_overwriteVideoMode = mode + 1;
 			// change last resolution to custom one
 			Patch<int>(0x4200E6 + 4, resolutions[mode].width);
@@ -110,7 +138,10 @@ INT_PTR CALLBACK Launcher(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 			Patch<int>(0x46F87C + 4, resolutions[mode].width);
 			Patch<int>(0x46F884 + 4, resolutions[mode].height);
 
+			Patch<int>(0x42FB25 + 1, GetShadowSize(shadow));
+
 			WriteVideoMode(mode);
+			WriteShadowsMode(shadow);
 			EndDialog(hDlg, LOWORD(wParam));
 			return (INT_PTR)TRUE;
 		}
@@ -138,9 +169,11 @@ void Init()
 	Patch<double>(0x5965C8, 325.0f);
 
 	// in game
-	Patch<void(__thiscall Camera::*)(float, float)>(0x597A6C,&Camera::Setup);
+	Patch(0x597A6C,&Camera::Setup);
 	// menu							 
-	Patch<void(__thiscall Camera::*)(float, float)>(0x597D14,&Camera::Setup);
+	Patch(0x597D14,&Camera::Setup);
+	// split screen					 
+	Patch(0x597F0C, &Camera::Setup_SplitScreen);
 
 	InjectHook(0x41F8A4, Hook_ChangeVideoMode, PATCH_CALL);
 	InjectHook(0x46FA98, Hook_StartupScale, PATCH_CALL);

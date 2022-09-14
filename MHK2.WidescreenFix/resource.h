@@ -11,6 +11,8 @@
 #define P1_RESET                        1001
 #define IDC_COMBO2                      1002
 #define P1_ACC                          1002
+#define IDC_RESOLUTION2                 1002
+#define IDC_SHADOWS                     1002
 #define P1_BRAKE                        1003
 #define P1_LEFT                         1004
 #define P1_RIGHT                        1005
