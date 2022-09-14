@@ -6,13 +6,13 @@ Fixes 2D scaling and adjusts camera.
 A new launcher is added to select any supported GPU resolution, last setting is saved to **mhk2.ini** in game folder.
 
 ### Before
-![](img\before.jpg)
+![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/before.jpg)
 ### After
-![](img\after.jpg)
+![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/after.jpg)
 
 
 ### Launcher
-![](img\launcher.png)
+![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/launcher.png)
 
 
 # Installation
