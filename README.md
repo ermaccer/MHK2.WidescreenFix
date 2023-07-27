@@ -10,8 +10,8 @@ A new launcher is added to select any supported GPU resolution, last setting is 
 
 ### Screenshots
 
-![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/after.jpg)
-
+![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/pic.jpg)
+![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/wideturbo.jpg)
 ![](https://raw.githubusercontent.com/ermaccer/MHK2.WidescreenFix/master/img/widemp.jpg)
 
 
