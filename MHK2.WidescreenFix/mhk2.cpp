@@ -14,24 +14,6 @@ void Set2DScale()
 	Patch<float>(0x5965E4, newScale);
 }
 
-void Hook_RwCameraSetViewWindow(int camera, RwV2d * view)
-{
-	float x = (float)*(int*)0x883700;
-	float y = (float)*(int*)0x883704;
-	float aspectRatio = (float)x / (float)y;
-
-	float hud_y = 0.7f * (aspectRatio / (4.0f / 3.0f));
-
-
-	float widthScale = 0.546875f;
-	RwV2d newView;
-
-	newView.x = hud_y + 0.039999999f;
-	newView.y = widthScale + -0.059999999f;
-
-	((void(__cdecl*)(int, RwV2d*))0x53BCD0)(camera, &newView);
-}
-
 void Hook_ChangeVideoMode(int mode)
 {
 	((void(__cdecl*)(int))0x5338C0)(mode);
@@ -64,19 +46,24 @@ void Camera::Setup(float a1, float a2)
 {
 	field20 = a1;
 	field24 = a2;
-	Hook_RwCameraSetViewWindow(camera, 0);
+	CalculateNewViewWindow();
 }
 
 void Camera::Setup_SplitScreen(float a1, float a2)
 {
 	field20 = a1;
 	field24 = a2;
+	CalculateNewViewWindow();
+}
+
+void Camera::CalculateNewViewWindow()
+{
 	float x = (float)*(int*)0x883700;
 	float y = (float)*(int*)0x883704;
 	float aspectRatio = (float)x / (float)y;
 
 	float _4_3 = 4.0f / 3.0f;
-	float scaleRatio = aspectRatio / _4_3 ;
+	float scaleRatio = aspectRatio / _4_3;
 	RwV2d newView;
 
 	float unk1 = ((double(__thiscall*)(Camera*)) * (int*)(*(int*)this + 36))(this);
@@ -88,7 +75,5 @@ void Camera::Setup_SplitScreen(float a1, float a2)
 
 	newView.x = field20 * scaleRatio;
 	newView.y = (field24 / v5) * scaleRatio;
-
 	((void(__cdecl*)(int, RwV2d*))0x53BCD0)(camera, &newView);
-
 }

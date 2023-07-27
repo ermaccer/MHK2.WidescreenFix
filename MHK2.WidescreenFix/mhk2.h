@@ -22,9 +22,10 @@ private:
 public:
 	void Setup(float a1, float a2);
 	void Setup_SplitScreen(float a1, float a2);
+
+	void CalculateNewViewWindow();
 };
 
-void Hook_RwCameraSetViewWindow(int camera, RwV2d* view);
 void Hook_ChangeVideoMode(int mode);
 void Hook_StartupScale();
 
