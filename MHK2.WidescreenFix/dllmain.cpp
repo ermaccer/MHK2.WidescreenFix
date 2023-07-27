@@ -83,11 +83,9 @@ void WriteShadowsMode(eShadowsSettings mode)
 INT_PTR CALLBACK Launcher(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static const wchar_t* szShadowNames[SHADOWS_TOTAL_SETTINGS] = {
-		L"Low",
 		L"Normal",
 		L"High",
 		L"Very High",
-		L"Ultra"
 	};
 
 	switch (message)
@@ -99,8 +97,11 @@ INT_PTR CALLBACK Launcher(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		res = GetPrivateProfileIntA("Settings", "VideoMode", 0, ".\\mhk2.ini");
 		shadow = GetPrivateProfileIntA("Settings", "Shadows", SHADOWS_NORMAL, ".\\mhk2.ini");
 
-		if (res > resolutions.size())
+		if (res > resolutions.size() || res < 0)
 			res = 0;
+
+		if (shadow > SHADOWS_TOTAL_SETTINGS || shadow < 0)
+			shadow = 0;
 
 		list = GetDlgItem(hDlg, IDC_COMBO1);
 		SendMessage(list, CB_RESETCONTENT, 0, 0);

@@ -48,16 +48,12 @@ int GetShadowSize(eShadowsSettings shadowType)
 {
 	switch (shadowType)
 	{
-	case SHADOWS_LOW:
-		return 64;
 	case SHADOWS_NORMAL:
 		return 128;
 	case SHADOWS_HIGH:
 		return 512;
 	case SHADOWS_VERY_HIGH:
 		return 2048;
-	case SHADOWS_ULTRA:
-		return 4096;
 	default:
 		break;
 	}
